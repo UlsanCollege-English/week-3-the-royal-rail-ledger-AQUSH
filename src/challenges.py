@@ -1,7 +1,5 @@
 """Week 3 homework: The Royal Rail Ledger.
-
-Implement the required functions below.
-Use stdlib only.
+Implement the required functions below. Use stdlib only.
 """
 
 from __future__ import annotations
@@ -53,12 +51,30 @@ def build_sll_from_list(values: list[int]) -> SinglyLinkedList:
         >>> sll_to_list(build_sll_from_list([4, 7, 9]))
         [4, 7, 9]
     """
-    raise NotImplementedError
+    sll = SinglyLinkedList()
+    if not values:
+        return sll
+
+    sll.head = SLLNode(values[0])
+    current = sll.head
+
+    for val in values[1:]:
+        current.next = SLLNode(val)
+        current = current.next
+
+    return sll
 
 
 def sll_to_list(sll: SinglyLinkedList) -> list[int]:
     """Return all values from a singly linked list as a Python list."""
-    raise NotImplementedError
+    result = []
+    current = sll.head
+
+    while current:
+        result.append(current.value)
+        current = current.next
+
+    return result
 
 
 def find_first_repeat_sll(sll: SinglyLinkedList) -> int | None:
@@ -66,7 +82,16 @@ def find_first_repeat_sll(sll: SinglyLinkedList) -> int | None:
 
     Return None if no value repeats.
     """
-    raise NotImplementedError
+    seen = set()
+    current = sll.head
+
+    while current:
+        if current.value in seen:
+            return current.value
+        seen.add(current.value)
+        current = current.next
+
+    return None
 
 
 def remove_all_from_dll(dll: DoublyLinkedList, target: int) -> None:
@@ -75,9 +100,36 @@ def remove_all_from_dll(dll: DoublyLinkedList, target: int) -> None:
     Update dll.head and dll.tail correctly.
     Return None.
     """
-    raise NotImplementedError
+    current = dll.head
+
+    while current:
+        next_node = current.next
+
+        if current.value == target:
+            # Update previous node
+            if current.prev:
+                current.prev.next = current.next
+            else:
+                dll.head = current.next
+
+            # Update next node
+            if current.next:
+                current.next.prev = current.prev
+            else:
+                dll.tail = current.prev
+
+        current = next_node
 
 
 def is_train_palindrome(dll: DoublyLinkedList) -> bool:
     """Stretch: return True if the DLL reads the same forward and backward."""
-    raise NotImplementedError
+    left = dll.head
+    right = dll.tail
+
+    while left and right and left != right and left.prev != right:
+        if left.value != right.value:
+            return False
+        left = left.next
+        right = right.prev
+
+    return True
